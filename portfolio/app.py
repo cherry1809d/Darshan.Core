@@ -76,6 +76,9 @@ def index():
         education=EDUCATION
     )
 
+import os # Add this at the very top of your file
+
 if __name__ == '__main__':
-    # 'debug=True' allows the server to reload automatically when you change code
-    app.run(host="0.0.0.0",debug=True)
+    # Use the port assigned by Render, or default to 5000 locally
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
