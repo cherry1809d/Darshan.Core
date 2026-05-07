@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.name }} | Tech Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+    </style>
+</head>
+<body class="dashboard-bg text-white font-sans selection:bg-blue-500">
+
+    <nav class="glass sticky top-0 z-50 px-6 py-4 border-b border-blue-900/30">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <span class="text-sm font-mono tracking-widest text-blue-400">Darshan.Core</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-[10px] uppercase tracking-[0.2em] font-bold">
+                <a href="#about" class="hover:text-blue-400 transition">About</a>
+                <a href="#projects" class="hover:text-blue-400 transition">Projects</a>
+                <a href="#experience" class="hover:text-blue-400 transition">Experience</a>
+                <a href="#competitions" class="hover:text-blue-400 transition">Competitions</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto p-6 space-y-10">
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section id="about" class="lg:col-span-1 glass rounded-3xl p-8 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-xs font-mono text-blue-400 mb-2 uppercase tracking-widest">// ABOUT ME</h2>
+                    <div class="mb-6 flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 p-[2px]">
+                            <div class="w-full h-full rounded-2xl bg-slate-900 flex items-center justify-center overflow-hidden">
+                                <img src="{{ url_for('static', filename='images/profile.jpeg') }}" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold">{{ user.name }}</h1>
+                            <p class="text-[10px] text-slate-400">{{ user.role }}</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-300 leading-relaxed italic">"{{ user.about }}"</p>
+                </div>
+            </section>
+
+            <section id="competitions" class="lg:col-span-2 glass rounded-3xl p-8">
+                <h2 class="text-xs font-mono text-blue-400 mb-6 uppercase tracking-widest">// COMPETITIONS & AWARDS</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {% for comp in competitions %}
+                    <div class="group relative bg-slate-900/50 border border-slate-700/50 rounded-xl p-3 hover:border-blue-500 transition">
+                        <img src="{{ url_for('static', filename='images/' + comp.image) }}" class="w-full h-20 object-cover rounded-lg mb-2 opacity-60 group-hover:opacity-100 transition">
+                        <p class="text-[10px] font-bold truncate">{{ comp.title }}</p>
+                        <p class="text-[9px] text-blue-400">{{ comp.award }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+        <section id="projects">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-black italic tracking-tighter uppercase">My Projects</h2>
+                <div class="h-[1px] flex-grow mx-6 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {% for p in projects %}
+                <div class="project-card group glass rounded-3xl overflow-hidden hover:scale-[1.02] transition-all duration-500 shadow-2xl">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/' + p.image) }}" alt="{{ p.title }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                        <span class="absolute bottom-4 left-6 text-[10px] bg-blue-600 px-3 py-1 rounded-full font-bold uppercase">{{ p.category }}</span>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-3">{{ p.title }}</h3>
+                        <p class="text-slate-400 text-xs mb-6 leading-relaxed">{{ p.desc }}</p>
+                        <div class="flex flex-wrap gap-2">
+                            {% for t in p.tech %}
+                            <span class="text-[9px] font-mono border border-slate-700 bg-slate-800/50 px-3 py-1 rounded-md text-blue-300">{{ t }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section id="experience" class="lg:col-span-1 glass rounded-3xl p-8">
+                <h2 class="text-xs font-mono text-blue-400 mb-6 uppercase tracking-widest">// EXPERIENCE</h2>
+                <div class="space-y-6">
+                    {% for exp in experience %}
+                    <div class="border-l-2 border-blue-500/30 pl-4 py-1">
+                        <p class="text-[10px] text-blue-400 font-mono">{{ exp.year }}</p>
+                        <h4 class="text-sm font-bold">{{ exp.role }}</h4>
+                        <p class="text-[10px] text-slate-400">{{ exp.company }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="lg:col-span-1 glass rounded-3xl p-8">
+                <h2 class="text-xs font-mono text-blue-400 mb-6 uppercase tracking-widest">// EDUCATION</h2>
+                {% for edu in education %}
+                <div class="flex items-start space-x-4">
+                    <div class="bg-blue-500/10 p-3 rounded-2xl">🎓</div>
+                    <div>
+                        <h4 class="text-sm font-bold">{{ edu.degree }}</h4>
+                        <p class="text-[10px] text-slate-400">{{ edu.institution }}</p>
+                        <p class="text-[10px] font-mono mt-1">{{ edu.year }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+
+            <section id="status" class="lg:col-span-1 glass rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                <div class="relative w-32 h-32 mb-4">
+                    <div class="absolute inset-0 rounded-full border-2 border-blue-500/20 animate-ping"></div>
+                    <div class="absolute inset-2 rounded-full border-2 border-blue-500/40"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-blue-500/20 rounded-full blur-xl animate-pulse"></div>
+                        <span class="text-2xl">📍</span>
+                    </div>
+                </div>
+                <h2 class="text-xs font-mono text-blue-400 mb-2 uppercase tracking-widest">CURRENT_STATUS</h2>
+                <p class="text-[11px] text-slate-300 font-medium px-4">{{ user.status }}</p>
+            </section>
+        </div>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
